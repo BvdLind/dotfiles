@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+xset s off dpms 0 10 0
+xset s off -dpms
+scrot /tmp/screen.png
+convert /tmp/screen.png -scale 10% -scale 1000% /tmp/screen.png
+[[ -f $HOME/Photos/lock.png ]] && convert /tmp/screen.png $HOME/Photos/lock.png -gravity center -composite -matte /tmp/screen.png
+i3lock -u -i /tmp/screen.png
+rm /tmp/screen.png
