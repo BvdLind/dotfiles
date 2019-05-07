@@ -31,9 +31,9 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
 #symfony aliases
-#alias sym:cdb="php app/console doctrine:database:create"
-#alias sym:udb="php app/console doctrine:schema:update --force"
-#alias sym:sr="php app/console server:r"
+alias sym:cdb="php app/console doctrine:database:create"
+alias sym:udb="php app/console doctrine:schema:update --force"
+alias sym:sr="php app/console server:r"
 alias sym56:cdb="php56 app/console doctrine:database:create"
 alias sym56:udb="php56 app/console doctrine:schema:update --force"
 alias sym56:sr="php56 app/console server:r"

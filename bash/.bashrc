@@ -243,7 +243,7 @@ parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-export PS1="\[\033[38;5;6m\]\u@\h[\A]\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput bold)\]\[$(tput sgr0)\]\[\033[38;5;14m\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]\[\033[38;5;15m\]\033[32m\]\$(parse_git_branch)\[\033[00m\] λ \[$(tput sgr0)\]"
+export PS1="\001\033[38;5;6m\002\u@\h[\A]\001$(tput sgr0)\002 \001\033[38;5;15m\002\001$(tput bold) \002\001$(tput sgr0)\002\001\033[38;5;14m\002\w\001$(tput sgr0)\002\001$(tput sgr0)\002\001\033[38;5;15m\002\[\033[32m\]\]\$(parse_git_branch)\001\033[00m\002 λ \001$(tput sgr0)\002"
 export PS1
 
 source /usr/share/doc/pkgfile/command-not-found.bash
