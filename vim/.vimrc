@@ -82,6 +82,7 @@ set pastetoggle=<f2>
 set history=1000
 set ttyfast
 set mouse=a
+set mousehide
 set magic
 set noshowmode
 set completeopt-=preview
@@ -152,6 +153,9 @@ let g:tex_flavor = "latex"
 map <leader>co :!pdflatex % && zathura %:r.pdf<CR>
 map <leader>xe :!xelatex % && zathura %:r.pdf<CR>
 map <leader>bi :!bibtex8 %:r<CR>
+
+" Markdown
+map <leader>mc :!pandoc % -t beamer -o %:r.pdf<CR>
 
 " Open current file in chrome
 map <leader>fr :!firefox %<CR>
@@ -272,13 +276,16 @@ nnoremap g, g,zz
 nnoremap <c-o> <c-o>zz
 
 " Easier to type motions
-noremap <localleader>m ^
-noremap <localleader>. $
-vnoremap <localleader>. g_
+noremap H ^
+noremap L $
+noremap L g_
 
 " Map ; to : for fewer keystrokes
 nnoremap ; :
 vmap ; :
+
+" Remap repeat motion
+nnoremap <localleader>; ;
 
 inoremap <C-Space> <C-x><C-o>
 
@@ -388,8 +395,8 @@ let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
                             \ '*vendor/*/test*', '*vendor/*/Test*',
                             \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
                             \ '*var/cache*', '*var/log*']
-nnoremap <S-h> <C-]>
-nnoremap <S-l> <C-T>
+nnoremap <localleader>m <C-]>
+nnoremap <localleader>. <C-T>
 map <leader>gct :!ctags<CR>
 
 " Lightline config
@@ -420,8 +427,19 @@ function! s:list_commits()
   return map(commits, '{"line": matchstr(v:val, "\\s\\zs.*"), "cmd": "'. git .' show ". matchstr(v:val, "^\\x\\+") }')
 endfunction
 
+" Nerdcommenter
+let g:NERDCompactSexyComs = 1
+let g:NERDCommentEmptyLines = 1
+let g:NERDSpaceDelims = 1
+let NERD_html_alt_style=1
+let g:NERDCustomDelimiters={
+  \ 'javascript': { 'left': '//', 'right': '', 'leftAlt': '{/*', 'rightAlt': '*/}' },
+\}
+
 " Vim Accent
 inoremap ;ac <C-x><C-u>
+
+nmap <F1> <Nop>
 
 " Startify
 let g:startify_bookmarks=[

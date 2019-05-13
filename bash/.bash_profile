@@ -7,6 +7,4 @@
 export EDITOR="vim"
 export BROWSER="firefox"
 
-if [[ $XDG_VTNR -eq 1 ]]; then
-  exec startx
-fi
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx

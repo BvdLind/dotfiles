@@ -191,4 +191,3 @@ bindsym $mod+Shift+x border none
 bindsym $mod+Shift+o border pixel 1
 
 exec --no-startup-id firefox
-exec --no-startup-id redshift
