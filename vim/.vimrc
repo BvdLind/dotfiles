@@ -1,10 +1,10 @@
-" My Vimrc
+" My Vim
 
 nnoremap <Space> <Nop>
 let mapleader=" "
 let maplocalleader=","
 
-" Vundle
+" Bundle
 set nocompatible
 filetype off
 
@@ -18,26 +18,20 @@ Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'junegunn/gv.vim'
-Plugin 'ervandew/supertab'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
-Plugin 'tpope/vim-vinegar'
 Plugin 'EinfachToll/DidYouMean'
 Plugin 'w0rp/ale'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mhinz/vim-startify'
 Plugin 'matze/vim-move'
-Plugin 'junegunn/vim-easy-align'
 Plugin 'itmammoth/doorboy.vim'
-Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'airblade/vim-accent'
 Plugin 'machakann/vim-highlightedyank'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'junegunn/fzf.vim'
-Plugin 'romainl/vim-devdocs'
-"Plugin 'junegunn/goyo.vim'
 
 " Language related
 Plugin 'leafgarland/typescript-vim'
@@ -48,15 +42,6 @@ Plugin 'pangloss/vim-javascript'
 " Color Themes
 Plugin 'dylanaraps/wal.vim'
 Plugin 'joshdick/onedark.vim'
-"Plugin 'morhetz/gruvbox'
-"Plugin 'ayu-theme/ayu-vim'
-"Plugin 'ajh17/spacegray.vim'
-"Plugin 'dracula/vim'
-"Plugin 'tomasr/molokai'
-"Plugin 'jacoborus/tender.vim'
-"Plugin 'arcticicestudio/nord-vim'
-"Plugin 'yuttie/hydrangea-vim'
-"Plugin 'tyrannicaltoucan/vim-deep-space'
 
 call vundle#end()
 filetype plugin on
@@ -88,7 +73,12 @@ set noshowmode
 set completeopt-=preview
 set confirm
 set cursorline
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
 set background=dark
+set updatetime=100
 hi cursorWinLeaveline cterm=none term=none
 autocmd InsertLeave * setlocal cursorline
 autocmd InsertEnter * setlocal nocursorline
@@ -97,11 +87,6 @@ autocmd WinLeave * setlocal nocursorline
 highlight CursorLine cterm=none guibg=#303000 ctermbg=blue
 highlight CursorLineNr guibg=#303000 ctermbg=blue
 
-" Search
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
 
 " Make sure Vim returns to the same line when you reopen a file.
 augroup line_return
@@ -113,9 +98,11 @@ augroup line_return
 augroup END
 
 " Spelling
-map <F6> :setlocal spell! spelllang=en<CR>
+map <F5> :setlocal spell!<CR>
+map <F6> :set spelllang=en<CR>
 map <F7> :set spelllang=nl<CR>
-inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+inoremap <c-f> <c-g>u<Esc>[s1z=`]a<c-g>u
+nnoremap <c-f> [s1z=<c-o>
 
 autocmd BufWritePre * %s/\s\+$//e " Automatically deletes trailing whitespace
 
@@ -133,7 +120,7 @@ nnoremap <silent> <leader>= <C-W>=<CR>
 
 " Copy selected text to system clipboard
 vnoremap <C-c> "+y
-map <C-v> "+P
+map <C-p> "+P
 
 " Toggle wrap
 nnoremap <leader>WT :set wrap!<CR>
@@ -176,38 +163,23 @@ let g:netrw_winsize = 20
 nnoremap <silent> <leader>f :Files<CR>
 nnoremap <silent> <leader>- :Files <C-r>=expand("%:h")<CR>/<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>]  :Tags<CR>
+nnoremap <silent> <leader>] :Tags<CR><CR>
 nnoremap <silent> <leader>b] :BTags<CR>
 let g:fzf_commits_log_options = '--graph --color=always
   \ --format="%C(yellow)%h%C(red)%d%C(reset)
   \ - %C(bold green)(%ar)%C(reset) %s %C(blue)<%an>%C(reset)"'
 nnoremap <silent> <leader>c  :Commits<CR>
 nnoremap <silent> <leader>bc :BCommits<CR>
-"let g:fzf_action = {
-  "\ 'ctrl-t': 'tab split',
-  "\ 'ctrl-i': 'split',
-  "\ 'ctrl-s': 'vsplit' }
-let g:fzf_layout = { 'down': '~25%' }
-
-let g:rg_command = '
-  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
-  \ -g "!{.git,node_modules,vendor}/*" '
-
-command! -bang -nargs=* F call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 set grepprg=rg\ --vimgrep
+command! -bang -nargs=* F call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!{.git,backend/node_modules}/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+let g:fzf_layout = { 'down': '~25%' }
+let g:rg_command = "rg --files --no-ignore --hidden --follow -g '!{.git,backend/node_modules}/*'"
+let g:dym_use_fzf = 1
 
 " Access my vimrc mappings
 nnoremap <leader>sev :vsplit $MYVIMRC<CR>
 nnoremap <leader>ev :e $MYVIMRC<CR>
 nnoremap <leader>sv :w<CR> :so $MYVIMRC<CR>
-
-" Abbreviations
-iab @@ bvanderlinden1@gmail.com
-iab ccopy copyright 2018 Bas van der Linden, all rights reserved.
-iab lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit
-iab llorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus ligula, accumsan id imperdiet rhoncus, dapibus vitae arcu.  Nulla non quam erat, luctus consequat nisi
-iab lllorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus ligula, accumsan id imperdiet rhoncus, dapibus vitae arcu.  Nulla non quam erat, luctus consequat nisi.  Integer hendrerit lacus sagittis erat fermentum tincidunt.  Cras vel dui neque.  In sagittis commodo luctus.  Mauris non metus dolor, ut suscipit dui.  Aliquam mauris lacus, laoreet et consequat quis, bibendum id ipsum.  Donec gravida, diam id imperdiet cursus, nunc nisl bibendum sapien, eget tempor neque elit in tortor
 
 nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel " Surround with double quotes
 
@@ -218,24 +190,12 @@ set directory^=/tmp/ " Swap files are stored here
 
 set statusline=%f\ -\ FileType:\ %y
 
-"set termguicolors     " enable true colors support
-"let ayucolor="dark" " for mirage version of theme
-
-"if !has("gui_running")
-"  if !has("nvim")
-"    set term=xterm
-"  endif
-"  set t_Co=256
-"  let &t_AB="\e[48;5;%dm"
-"  let &t_AF="\e[38;5;%dm"
-"endif
-
 " Remapping backaspace behavior because of xterm
 inoremap <Char-0x07F> <BS>
 nnoremap <Char-0x07F> <BS>
 
 " Kill window
-nnoremap K :q<cr>
+nnoremap K :q<CR>
 
 " Man
 nnoremap M K
@@ -256,15 +216,8 @@ nnoremap J mzJ`z
 " The normal use of S is covered by cc, so don't worry about shadowing it.
 nnoremap S i<cr><esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>`w
 
-" Substitute
-nnoremap <c-s> :%s/
-vnoremap <c-s> :s/
-
 " Open current directory in Finder
 nnoremap <leader>O :!nnn .<cr>
-
-" Easy way to open file
-nnoremap <leader>e :e<Space>
 
 " Keep search matches in the middle of the window.
 nnoremap n nzzzv
@@ -327,9 +280,6 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 " Clear search registry
 nnoremap <silent> <leader>/ :nohlsearch<CR>"
 
-" Pull word under cursor into LHS of a substitute (for quick search and replace)
-nnoremap <Localleader>z :%s#\<<C-r>=expand("<cword>")<CR>\>#
-
 " Indent lines with a single '<' or '>'
 nnoremap > >>_
 nnoremap < <<_
@@ -364,9 +314,9 @@ let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_echo_msg_format = '%linter% says %s %code%[%severity%]'
-let g:ale_completion_enabled = 0
 let g:ale_lint_on_enter = 1
 let g:ale_sign_column_always = 1
+let g:ale_completion_enabled = 1
 let g:ale_lint_on_filetype_changed = 1
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
@@ -379,14 +329,6 @@ map <leader>at :ALEToggle<CR>
 let g:doorboy_additional_brackets = {
   \ 'html': ['<>']
   \ }
-
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-
-" Goyo mapping
-" nnoremap <leader>G :Goyo<CR>
 
 " Ctags & Gutentags
 let g:gutentags_cache_dir = '~/.vim/gutentags'
@@ -401,7 +343,7 @@ map <leader>gct :!ctags<CR>
 
 " Lightline config
 let g:lightline = {
-\ 'colorscheme': 'wombat',
+\ 'colorscheme': 'wal',
 \ 'active': {
 \   'left': [
 \       ['mode', 'paste'], ['readonly', 'relativepath', 'modified']
@@ -419,6 +361,17 @@ let g:lightline = {
 " vim-move modifier key
 let g:move_key_modifier = 'C'
 
+" Tab autocomplete
+" function! InsertTabWrapper()
+  " let col = col('.') - 1
+  " if !col || getline('.')[col - 1] !~ '\k'
+    " return "\<tab>"
+  " else
+    " return "\<c-p>"
+  " endif
+" endfunction
+" inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+
 " Function to get list of commits to be used in startify list
 function! s:list_commits()
   let git = 'git -C C:'
@@ -427,7 +380,7 @@ function! s:list_commits()
   return map(commits, '{"line": matchstr(v:val, "\\s\\zs.*"), "cmd": "'. git .' show ". matchstr(v:val, "^\\x\\+") }')
 endfunction
 
-" Nerdcommenter
+" Nerd commenter
 let g:NERDCompactSexyComs = 1
 let g:NERDCommentEmptyLines = 1
 let g:NERDSpaceDelims = 1
@@ -440,8 +393,15 @@ let g:NERDCustomDelimiters={
 inoremap ;ac <C-x><C-u>
 
 nmap <F1> <Nop>
+imap <F1> <Nop>
 
-" Startify
+" Git Gutter
+nnoremap <localleader>gh :GitGutterLineHighlightsToggle<CR>
+nnoremap <localleader>go :GitGutterToggle<CR>
+nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
+
+" Stratify
 let g:startify_bookmarks=[
 \ '~/.vimrc',
 \ '~/.vim/plugins.vim',

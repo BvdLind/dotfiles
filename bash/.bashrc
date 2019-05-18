@@ -2,8 +2,12 @@
 # ~/.bashrc
 #
 
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+if [[ $DISPLAY ]]; then
+  # If not running interactively, don't do anything
+  [[ $- != *i* ]] && return
+  [[ -z "$TMUX" ]] && exec tmux
+fi
+
 
 if [ -f ~/.bash_aliases ]; then
 . ~/.bash_aliases
