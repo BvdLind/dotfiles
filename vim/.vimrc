@@ -18,9 +18,8 @@ Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'junegunn/gv.vim'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
+Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'honza/vim-snippets'
 Plugin 'EinfachToll/DidYouMean'
 Plugin 'w0rp/ale'
@@ -77,8 +76,10 @@ set hlsearch
 set incsearch
 set ignorecase
 set smartcase
+set ttimeoutlen=500
 set background=dark
 set updatetime=100
+set lazyredraw
 hi cursorWinLeaveline cterm=none term=none
 autocmd InsertLeave * setlocal cursorline
 autocmd InsertEnter * setlocal nocursorline
@@ -96,6 +97,10 @@ augroup line_return
        \     execute 'normal! g`"zvzz' |
        \ endif
 augroup END
+
+if has("gui_running")
+ colorscheme onedark
+endif
 
 " Spelling
 map <F5> :setlocal spell!<CR>
@@ -160,7 +165,7 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 20
 
 " FZF
-nnoremap <silent> <leader>f :Files<CR>
+nnoremap <silent> <leader>f :Files <CR>
 nnoremap <silent> <leader>- :Files <C-r>=expand("%:h")<CR>/<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>] :Tags<CR><CR>
@@ -266,7 +271,7 @@ map <leader>S ySiw
 map <leader>s ysiw
 
 " qq to record, Q to replay
-nnoremap Q @q
+" nnoremap Q @q
 
 noremap <leader>u :w<Home>silent <End> !urlview<CR>
 
@@ -281,8 +286,8 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 nnoremap <silent> <leader>/ :nohlsearch<CR>"
 
 " Indent lines with a single '<' or '>'
-nnoremap > >>_
-nnoremap < <<_
+" nnoremap > >>_
+" nnoremap < <<_
 
 " Shell inside vim
 noremap <silent> Z :suspend<CR>
@@ -361,17 +366,6 @@ let g:lightline = {
 " vim-move modifier key
 let g:move_key_modifier = 'C'
 
-" Tab autocomplete
-" function! InsertTabWrapper()
-  " let col = col('.') - 1
-  " if !col || getline('.')[col - 1] !~ '\k'
-    " return "\<tab>"
-  " else
-    " return "\<c-p>"
-  " endif
-" endfunction
-" inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-
 " Function to get list of commits to be used in startify list
 function! s:list_commits()
   let git = 'git -C C:'
@@ -394,6 +388,8 @@ inoremap ;ac <C-x><C-u>
 
 nmap <F1> <Nop>
 imap <F1> <Nop>
+
+nnoremap Q @@
 
 " Git Gutter
 nnoremap <localleader>gh :GitGutterLineHighlightsToggle<CR>

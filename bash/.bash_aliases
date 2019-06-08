@@ -3,6 +3,7 @@ shopt -s autocd
 alias i3r="i3-msg restart"
 alias grep='grep --color=auto'
 alias brc='source ~/.bashrc'
+alias sl=ls
 alias ls='ls -hF --color=auto'
 alias lr='ls -R'
 alias ll='ls -l'
@@ -11,10 +12,15 @@ alias lx='ll -BX'                   # sort by extension
 alias lz='ll -rS'                   # sort by size
 alias lt='ll -rt'                   # sort by date
 alias lm='la | more'
+alias vrc="vim ~/.vimrc"
+alias vbrc="vim ~/.bashrc"
+alias vbpf="vim ~/.bash_profile"
+alias vba="vim ~/.bash_aliases"
 alias g="git"
 alias lpass_fzf='lpass show -c --password $(lpass ls  | fzf | awk "{print $(NF)}" | sed "s/\]//g")'
 alias q="exit"
 alias e.="nnn ."
+alias h='history'
 #export TERM=xterm-256color
 export GIT_EDITOR=vim
 alias stage-verslag="cd ~/Documents/stage-dingen/onderzoeksverslag-stage/"
@@ -24,6 +30,7 @@ alias boeken="cd ~/Documents/Boeken/"
 alias mountguru="cd ~/Documents/mountguru"
 alias mg-pwa="cd ~/Documents/mobile-web-app"
 alias .vim="cd ~/.vim"
+alias -- -='cd -'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
