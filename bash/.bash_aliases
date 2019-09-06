@@ -1,8 +1,6 @@
-#set -o vi
-shopt -s autocd
 alias i3r="i3-msg restart"
 alias grep='grep --color=auto'
-alias brc='source ~/.bashrc'
+alias sbrc='source ~/.bashrc'
 alias sl=ls
 alias ls='ls -hF --color=auto'
 alias lr='ls -R'
@@ -21,14 +19,17 @@ alias lpass_fzf='lpass show -c --password $(lpass ls  | fzf | awk "{print $(NF)}
 alias q="exit"
 alias e.="nnn ."
 alias h='history'
-#export TERM=xterm-256color
+alias https='http --default-scheme=https'
 export GIT_EDITOR=vim
+alias ctags-git="rg --files | ctags -R --links=no -L -"
 alias stage-verslag="cd ~/Documents/stage-dingen/onderzoeksverslag-stage/"
+alias portfolio="cd ~/Documents/stage-dingen/portfolio/"
 alias downloads="cd ~/Downloads/"
 alias documents="cd ~/Documents/"
-alias boeken="cd ~/Documents/Boeken/"
+alias books="cd ~/Documents/books/"
 alias mountguru="cd ~/Documents/mountguru"
 alias mg-pwa="cd ~/Documents/mobile-web-app"
+alias startAS="/opt/android-studio/bin/studio.sh"
 alias .vim="cd ~/.vim"
 alias -- -='cd -'
 alias ..='cd ..'
@@ -86,11 +87,10 @@ alias grb="git rebase master"
 alias grbi="git rebase -i master"
 alias gru="git remote update"
 
-alias gs="git status"
+alias gst="git status"
 alias gsa="git stash apply"
 alias gsl="git shortlog -n -s"
 alias gsp="git stash pop"
-alias gst="git stash $*"
 alias gstl="git stash list"
 alias c="printf '\033c'"
 

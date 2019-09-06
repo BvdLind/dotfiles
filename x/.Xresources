@@ -1,1 +1,9 @@
-*.font:		    NotoSansMono:pixelsize=18:antialias=true:autohint=true;
+URxvt.font:                         xft:DejaVuSansMono:pixelsize=18:antialias=true:autohint=true;
+URxvt.faceName:                     xft:DejaVuSansMono:pixelsize=18:antialias=true:autohint=true;
+URxvt.letterSpace:                  -1;
+URxvt.scrollBar:                    false;
+URxvt.keysym.Shift-Control-V:       perl:clipboard:paste
+URxvt.keysym.Shift-Control-C:       perl:clipboard:on_sel_grab
+URxvt.iso14755:                     False
+! URxvt.perl-ext-common:              font,default,matcher,clipboard
+urxvt.perl-ext-common:              default,tabbed,matcher,resize-font,-tabbed

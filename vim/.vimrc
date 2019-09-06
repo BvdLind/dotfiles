@@ -20,6 +20,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'junegunn/gv.vim'
 Plugin 'garbas/vim-snipmate'
 Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
 Plugin 'honza/vim-snippets'
 Plugin 'EinfachToll/DidYouMean'
 Plugin 'w0rp/ale'
@@ -30,6 +31,7 @@ Plugin 'itmammoth/doorboy.vim'
 Plugin 'airblade/vim-accent'
 Plugin 'machakann/vim-highlightedyank'
 Plugin 'ludovicchabant/vim-gutentags'
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 
 " Language related
@@ -37,6 +39,7 @@ Plugin 'leafgarland/typescript-vim'
 Plugin 'mxw/vim-jsx'
 Plugin 'nelsyeung/twig.vim'
 Plugin 'pangloss/vim-javascript'
+Plugin 'posva/vim-vue'
 
 " Color Themes
 Plugin 'dylanaraps/wal.vim'
@@ -134,7 +137,7 @@ nnoremap <leader>WT :set wrap!<CR>
 au BufRead,BufNewFile *.ts setfiletype typescript
 
 " Format prettier
-let g:prettier#autoformat = 1
+" let g:prettier#autoformat = 1
 let g:prettier#config#single_quote = 'true'
 nnoremap <leader>p :Prettier<CR>
 
@@ -165,6 +168,14 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 20
 
 " FZF
+"search project files
+silent! nmap <leader>g :GFiles<CR>
+"search project files by lines of code
+nnoremap <leader>l :Lines<cr>
+"start a search query by pressing \
+nnoremap \  :Ag<space>
+"search for word under cursor by pressing |
+nnoremap \| :Ag <C-R><C-W><cr>:cw<cr>
 nnoremap <silent> <leader>f :Files <CR>
 nnoremap <silent> <leader>- :Files <C-r>=expand("%:h")<CR>/<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
@@ -337,14 +348,14 @@ let g:doorboy_additional_brackets = {
 
 " Ctags & Gutentags
 let g:gutentags_cache_dir = '~/.vim/gutentags'
-let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
-                            \ '*.phar', '*.ini', '*.rst', '*.md',
-                            \ '*vendor/*/test*', '*vendor/*/Test*',
-                            \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
-                            \ '*var/cache*', '*var/log*']
+" let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
+                            " \ '*.phar', '*.ini', '*.rst', '*.md',
+                            " \ '*vendor/*/test*', '*vendor/*/Test*',
+                            " \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
+                            " \ '*var/cache*', '*var/log*']
+let g:gutentags_file_list_command = 'rg --files'
 nnoremap <localleader>m <C-]>
 nnoremap <localleader>. <C-T>
-map <leader>gct :!ctags<CR>
 
 " Lightline config
 let g:lightline = {

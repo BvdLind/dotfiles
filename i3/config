@@ -6,7 +6,7 @@ default_border none
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 # start a terminal
-bindsym $mod+Return exec st
+bindsym $mod+Return exec --no-startup-id urxvt
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -142,7 +142,8 @@ client.placeholder      $bg     $bg     $fg  $bg       $bg
 client.background       $bg
 
 # PROTIP: You can also dynamically set dmenu's colors this way:
-bindsym $mod+d exec dmenu_run -nb "$fg" -nf "$bg" -sb "$bg" -sf "$fg"
+# bindsym $mod+d exec dmenu_run -nb "$fg" -nf "$bg" -sb "$bg" -sf "$fg"
+bindsym $mod+d exec dmenu_run
 
 # Start i3bar to display a workspace bar
 bar {
@@ -152,9 +153,9 @@ bar {
     inactive_workspace #333333 #222222 #888888
     urgent_workspace   #2f343a #900000 #ffffff
   }
-  font pango: NotoSansMono 12
+  font pango: NotoSansMono 8.7
   tray_output none
-  status_command bumblebee-status -m cpu disk memory battery datetime brightness pasink -t wal-powerline
+  status_command ~/.config/i3/bumblebee-status/bumblebee-status -m cmus cpu disk memory nic battery datetime brightness pasink xrandr system -t wal -p disk.path=/home datetime.locale=nl_NL.UTF-8 nic.format="{intf} {state} {ssid}"
 }
 
 ## Manual management of external displays
@@ -176,18 +177,19 @@ bindsym $mod+x mode "$mode_display"
 #---Basic Bindings---#
 bindsym $mod+Shift+BackSpace exec --no-startup-id prompt "Reboot computer?" "$reboot"
 bindsym $mod+Escape workspace prev
-bindsym $mod+Shift+v exec st -e vim
+bindsym $mod+Shift+v exec urxvt -e vim
 bindsym Control+$mod+l exec betterlockscreen -l dim
 
 #---Function Key Bindings---#
 # bindsym $mod+BackSpace
-bindsym $mod+F12 exec st -e nmtui
-bindsym $mod+F11 exec st -e cmus
-bindsym $mod+F10 exec st -e newsboat
+bindsym $mod+F12 exec urxvt -e nmtui
+bindsym $mod+F11 exec urxvt -e cmus
+bindsym $mod+F10 exec urxvt -e newsboat
 
 # Aesthetics
 bindsym $mod+Shift+n border normal
 bindsym $mod+Shift+x border none
 bindsym $mod+Shift+o border pixel 1
 
+exec --no-startup-id redshift-gtk
 exec --no-startup-id firefox
