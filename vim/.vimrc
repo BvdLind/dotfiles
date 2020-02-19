@@ -33,6 +33,18 @@ Plugin 'machakann/vim-highlightedyank'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
+Plugin 'bmewburn/intelephense-docs'
+
+
+" Plugin 'Shougo/deoplete.nvim'
+" Plugin 'roxma/nvim-yarp'
+" Plugin 'roxma/vim-hug-neovim-rpc'
+if has('nvim')
+  " Plugin 'neoclide/coc.nvim', {'branch': 'release'}
+  Plugin 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+endif
+
+" let g:deoplete#enable_at_startup = 1
 
 " Language related
 Plugin 'leafgarland/typescript-vim'
@@ -40,13 +52,20 @@ Plugin 'mxw/vim-jsx'
 Plugin 'nelsyeung/twig.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'posva/vim-vue'
+Plugin 'akz92/vim-ionic2'
+Plugin 'jwalton512/vim-blade'
 
 " Color Themes
 Plugin 'dylanaraps/wal.vim'
 Plugin 'joshdick/onedark.vim'
+Plugin 'ayu-theme/ayu-vim'
+Plugin 'morhetz/gruvbox'
+Plugin 'sickill/vim-monokai'
+
 
 call vundle#end()
 filetype plugin on
+set omnifunc=syntaxcomplete#Complete
 
 colorscheme wal
 
@@ -56,8 +75,7 @@ set shiftwidth=2 tabstop=2 softtabstop=2 expandtab
 set autoindent
 set textwidth=80
 set smartindent
-set number
-set relativenumber
+set nu rnu
 set nocompatible
 set encoding=utf-8
 set laststatus=2
@@ -80,7 +98,7 @@ set incsearch
 set ignorecase
 set smartcase
 set ttimeoutlen=500
-set background=dark
+set background=light
 set updatetime=100
 set lazyredraw
 hi cursorWinLeaveline cterm=none term=none
@@ -88,9 +106,12 @@ autocmd InsertLeave * setlocal cursorline
 autocmd InsertEnter * setlocal nocursorline
 autocmd WinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
-highlight CursorLine cterm=none guibg=#303000 ctermbg=blue
-highlight CursorLineNr guibg=#303000 ctermbg=blue
+highlight CursorLine term=bold cterm=bold
+" highlight CursorLineNr ctermbg=blue guibg=Grey40
+" highlight CursorLine cterm=none guibg=#303000 ctermbg=blue
+" highlight CursorLineNr guibg=#303000 ctermbg=blue
 
+autocmd BufNewFile *.html 0r ~/.vim/templates/html.skel
 
 " Make sure Vim returns to the same line when you reopen a file.
 augroup line_return
@@ -101,6 +122,13 @@ augroup line_return
        \ endif
 augroup END
 
+" if exists('+termguicolors')
+  " " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  " " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  " set termguicolors     " enable true colors support
+" endif
+
+let ayucolor="light"
 if has("gui_running")
  colorscheme onedark
 endif
@@ -112,7 +140,7 @@ map <F7> :set spelllang=nl<CR>
 inoremap <c-f> <c-g>u<Esc>[s1z=`]a<c-g>u
 nnoremap <c-f> [s1z=<c-o>
 
-autocmd BufWritePre * %s/\s\+$//e " Automatically deletes trailing whitespace
+" autocmd BufWritePre * %s/\s\+$//e " Automatically deletes trailing whitespace
 
 func! CurrentFileDir(cmd)
    return a:cmd . " " . expand("%:p:h") . "/"
@@ -130,6 +158,8 @@ nnoremap <silent> <leader>= <C-W>=<CR>
 vnoremap <C-c> "+y
 map <C-p> "+P
 
+" autocmd BufWritePost * echo "Goed gedaan :)"
+
 " Toggle wrap
 nnoremap <leader>WT :set wrap!<CR>
 
@@ -138,9 +168,21 @@ au BufRead,BufNewFile *.ts setfiletype typescript
 
 " Format prettier
 " let g:prettier#autoformat = 1
-let g:prettier#config#single_quote = 'true'
+" let g:prettier#config#single_quote = 'false'
+let g:prettier#config#bracket_spacing = 'true'
+" Prettier for PHP
+function! PrettierPhpCursor()
+  let save_pos = getpos(".")
+  %! prettier --stdin --parser=php
+  call setpos('.', save_pos)
+endfunction
+" define custom command
+command! PrettierPhp call PrettierPhpCursor()
+" format on save
+" autocmd BufwritePre *.php PrettierPhp
 nnoremap <leader>p :Prettier<CR>
-
+" au Filetype php nnoremap <leader>p: PrettierPhp<CR>
+autocmd FileType php nnoremap <buffer> <leader>p :PrettierPhp<CR>
 let g:livepreview_previewer = 'zathura'
 
 " Latex
@@ -148,6 +190,8 @@ let g:tex_flavor = "latex"
 map <leader>co :!pdflatex % && zathura %:r.pdf<CR>
 map <leader>xe :!xelatex % && zathura %:r.pdf<CR>
 map <leader>bi :!bibtex8 %:r<CR>
+
+map <leader>gr :!grip -b % <CR>
 
 " Markdown
 map <leader>mc :!pandoc % -t beamer -o %:r.pdf<CR>
@@ -166,6 +210,17 @@ let g:netrw_liststyle = 3 "Open in prior window
 let g:netrw_browse_split = 4 "Open splits to the right
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
+
+" omnifuncs
+augroup omnifuncs
+  autocmd!
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+augroup end
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " FZF
 "search project files
@@ -201,6 +256,7 @@ nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel " Surround with double quotes
 
 " File path completion
 imap <localleader><localleader> <C-X><C-F>
+" inoremap <C-@> <c-x><c-o>
 
 set directory^=/tmp/ " Swap files are stored here
 
@@ -211,7 +267,8 @@ inoremap <Char-0x07F> <BS>
 nnoremap <Char-0x07F> <BS>
 
 " Kill window
-nnoremap K :q<CR>
+" nnoremap K :q<CR>
+nnoremap Q :q<CR>
 
 " Man
 nnoremap M K
@@ -221,6 +278,7 @@ nnoremap <leader>n :setlocal number!<cr> :setlocal relativenumber!<cr>
 
 " Yank to end of line
 nnoremap Y y$
+nnoremap <C-@> echo "test"
 
 " Select entire buffer
 nnoremap vaa ggvGg_
@@ -250,8 +308,8 @@ noremap L $
 noremap L g_
 
 " Map ; to : for fewer keystrokes
-nnoremap ; :
-vmap ; :
+" nnoremap ; :
+" vmap ; :
 
 " Remap repeat motion
 nnoremap <localleader>; ;
@@ -275,7 +333,7 @@ nnoremap <leader>gb :Gblame<cr>
 nnoremap <leader>gco :Git checkout<Space>
 nnoremap <leader>gci :Gcommit<cr>
 nnoremap <leader>gmv :Gmove<Space>
-nnoremap <leader>gr :Gremove<cr>
+nnoremap <leader>grm :Gremove<cr>
 
 " vim surround
 map <leader>S ySiw
@@ -314,17 +372,18 @@ nnoremap <leader>r :redraw!<CR>
 
 " Ale
 let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'typescript': ['tslint'],
-\   'php': ['php'],
+\   'javascript': ['prettier'],
+\   'typescript': ['prettier'],
+\   'php': ['prettier'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['eslint'],
+\   'javascript': ['prettier'],
 \   'json': ['prettier'],
 \   'css': ['prettier'],
 \   'scss': ['prettier'],
-\   'typescript': ['tslint'],
+\   'php': ['prettier'],
+\   'typescript': ['prettier'],
 \}
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
@@ -345,6 +404,8 @@ map <leader>at :ALEToggle<CR>
 let g:doorboy_additional_brackets = {
   \ 'html': ['<>']
   \ }
+
+let g:blade_custom_directives = ['datetime', 'javascript']
 
 " Ctags & Gutentags
 let g:gutentags_cache_dir = '~/.vim/gutentags'
@@ -400,7 +461,7 @@ inoremap ;ac <C-x><C-u>
 nmap <F1> <Nop>
 imap <F1> <Nop>
 
-nnoremap Q @@
+" nnoremap Q @@
 
 " Git Gutter
 nnoremap <localleader>gh :GitGutterLineHighlightsToggle<CR>

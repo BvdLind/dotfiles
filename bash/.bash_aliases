@@ -18,7 +18,9 @@ alias g="git"
 alias lpass_fzf='lpass show -c --password $(lpass ls  | fzf | awk "{print $(NF)}" | sed "s/\]//g")'
 alias q="exit"
 alias e.="nnn ."
+alias php-as="php artisan serve"
 alias h='history'
+alias fd="fdfind"
 alias https='http --default-scheme=https'
 export GIT_EDITOR=vim
 alias ctags-git="rg --files | ctags -R --links=no -L -"
@@ -29,7 +31,6 @@ alias documents="cd ~/Documents/"
 alias books="cd ~/Documents/books/"
 alias mountguru="cd ~/Documents/mountguru"
 alias mg-pwa="cd ~/Documents/mobile-web-app"
-alias startAS="/opt/android-studio/bin/studio.sh"
 alias .vim="cd ~/.vim"
 alias -- -='cd -'
 alias ..='cd ..'
@@ -50,7 +51,7 @@ alias sym56:sr="php56 app/console server:r"
 alias glb="git log --branches --date-order"
 alias gl="git log --oneline --all --graph --decorate  $*"
 alias ga="git add -A $*"
-alias grep="grep -nRi $*"
+# alias grep="grep -nRi $*"
 alias gac="git add -A :/ $T git commit -e"
 alias gacm="git add -A :/ $T git commit -m $*"
 alias gau="git add -u"

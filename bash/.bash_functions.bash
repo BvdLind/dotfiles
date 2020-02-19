@@ -1,13 +1,13 @@
 md() {
-  mkdir -p $1
-  cd $1
+  mkdir -p "$1"
+  cd "$1" || exit
 }
 
 cl() {
 	local dir="$1"
 	local dir="${dir:=$HOME}"
 	if [[ -d "$dir" ]]; then
-		cd "$dir" >/dev/null; ls
+		cd "$dir" >/dev/null || exit; ls
 	else
 		echo "bash: cl: $dir: Directory not found"
 	fi
@@ -18,7 +18,7 @@ cl() {
 #   - Exit if there's no match (--exit-0)
 fe() {
   local files
-  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  IFS=$'\n' files=("$(fzf-tmux --query="$1" --multi --select-1 --exit-0)")
   [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
@@ -39,11 +39,11 @@ fo() {
 vg() {
   local file
 
-  file="$(ag --nobreak --noheading $@ | fzf -0 -1 | awk -F: '{print $1}')"
+  file="$(ag --nobreak --noheading "$@" | fzf -0 -1 | awk -F: '{print $1}')"
 
   if [[ -n $file ]]
   then
-     vim $file
+     vim "$file"
   fi
 }
 
@@ -52,26 +52,26 @@ vg() {
   local file
   local line
 
-  read -r file line <<<"$(ag --nobreak --noheading $@ | fzf -0 -1 | awk -F: '{print $1, $2}')"
+  read -r file line <<<"$(ag --nobreak --noheading "$@" | fzf -0 -1 | awk -F: '{print $1, $2}')"
 
   if [[ -n $file ]]
   then
-     vim $file +$line
+     vim "$file" + "$line"
   fi
 }
 
 # fd - cd to selected directory
-fd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-}
+# fd() {
+  # local dir
+  # dir=$(find ${1:-.} -path '*/\.*' -prune \
+                  # -o -type d -print 2> /dev/null | fzf +m) &&
+  # cd "$dir"
+# }
 
 # fda - including hidden directories
 fda() {
   local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
+  dir=$(find "${1:-.}" -type d 2> /dev/null | fzf +m) && cd "$dir" || exit
 }
 
 # fdr - cd to selected parent directory
@@ -82,11 +82,11 @@ fdr() {
     if [[ "${1}" == '/' ]]; then
       for _dir in "${dirs[@]}"; do echo $_dir; done
     else
-      get_parent_dirs $(dirname "$1")
+      get_parent_dirs "$(dirname "$1")"
     fi
   }
-  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
-  cd "$DIR"
+  local DIR="$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf-tmux --tac)"
+  cd "$DIR" || exit
 }
 
 # cf - fuzzy cd from anywhere
@@ -95,15 +95,15 @@ fdr() {
 cf() {
   local file
 
-  file="$(locate -Ai -0 $@ | grep -z -vE '~$' | fzf --read0 -0 -1)"
+  file="$(locate -Ai -0 "$@" | grep -z -vE '~$' | fzf --read0 -0 -1)"
 
   if [[ -n $file ]]
   then
      if [[ -d $file ]]
      then
-        cd -- $file
+        cd -- "$file" || exit
      else
-        cd -- ${file:h}
+        cd -- "${file:h}" || exit
      fi
   fi
 }
@@ -123,7 +123,7 @@ fkill() {
 
     if [ "x$pid" != "x" ]
     then
-        echo $pid | xargs kill -${1:-9}
+        echo "$pid" | xargs kill -"${1:-9}"
     fi
 }
 
@@ -132,7 +132,7 @@ fbr() {
   local branches branch
   branches=$(git --no-pager branch -vv) &&
   branch=$(echo "$branches" | fzf +m) &&
-  git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+  git checkout "$(echo "$branch" | awk '{print $1}' | sed "s/.* //")"
 }
 
 # fbr - checkout git branch
@@ -140,7 +140,7 @@ fbr() {
   local branches branch
   branches=$(git --no-pager branch -vv) &&
   branch=$(echo "$branches" | fzf +m) &&
-  git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+  git checkout "$(echo "$branch" | awk '{print $1}' | sed "s/.* //")"
 }
 
 # fshow - git commit browser
@@ -149,15 +149,11 @@ fshow() {
       --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
   fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
       --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                (grep -o '[a-f0-9]\\{7\\}' | head -1 |
                 xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                 {}
 FZF-EOF"
 }
-
-alias glNoGraph='git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr% C(auto)%an" "$@"'
-_gitLogLineToHash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
-_viewGitLogLine="$_gitLogLineToHash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy'"
 
 # fcoc_preview - checkout git commit with previews
 fcoc_preview() {
@@ -168,23 +164,13 @@ fcoc_preview() {
   git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
-# fshow_preview - git commit browser with previews
-fshow_preview() {
-    glNoGraph |
-        fzf --no-sort --reverse --tiebreak=index --no-multi \
-            --ansi --preview="$_viewGitLogLine" \
-                --header "enter to view, alt-y to copy hash" \
-                --bind "enter:execute:$_viewGitLogLine   | less -R" \
-                --bind "alt-y:execute:$_gitLogLineToHash | xclip"
-}
-
 # fcs - get git commit sha
 # example usage: git rebase -i `fcs`
 fcs() {
   local commits commit
   commits=$(git log --color=always --pretty=oneline --abbrev-commit --reverse) &&
   commit=$(echo "$commits" | fzf --tac +s +m -e --ansi --reverse) &&
-  echo -n $(echo "$commit" | sed "s/ .*//")
+  echo -n "$(echo "$commit" | sed "s/ .*//")"
 }
 
 # fgst - pick files from `git status -s`
@@ -231,20 +217,27 @@ getOneTabData() {
   cat ~/.mozilla/firefox/g1dmk357.default/browser-extension-data/extension@one-tab.com/storage.js
 }
 
+# copyOnetabDataIfNotCorrupted() {
+ # state="$(jq '.state' /home/bas/.mozilla/firefox/g1dmk357.default/browser-extension-data/extension@one-tab.com/storage.js | tr -d '\\\"')"
+ # if [[ ${state} != "{tabGroups:[]}" ]]; then
+   # cat /home/bas/.mozilla/firefox/g1dmk357.default/browser-extension-data/extension@one-tab.com/storage.js > /home/bas/oneTabExport
+ # fi
+# }
+
 extractUrlsFromOnetabJSON() {
-  json="$(jq '.state' $1 | tr -d ' \\')"
+  json="$(jq '.state' "$1" | tr -d ' \\')"
   json="${json:1:-1}"
   touch ~/tmpStorage
-  echo ${json} > ~/tmpStorage
+  echo "${json}" > ~/tmpStorage
   # jq '' ~/tmpStorage 2> /dev/null ||
     # (echo "fix bad characters in export and try again" && echo ${json} > sanitizedOnetabExport && return 1)
-  jq '' ~/tmpStorage 2> /dev/null || echo "fix bad characters in export and try again" && echo ${json} > onetabExportNeedsFixing && return 1
+  jq '' ~/tmpStorage 2> /dev/null || echo "fix bad characters in export and try again" && echo "${json}" > onetabExportNeedsFixing && return 1
  # jq '.tabGroups[]."tabsMeta"[]."url"' | cat $1 | tr -d '\\'  | tr -d '"'
   extractUrlsSanitizedOnetabExport ~/tmpStorage
 }
 
 extractUrlsSanitizedOnetabExport() {
-  jq '.tabGroups[]."tabsMeta"[]."url"' $1 | tr -d '\"' > sanitizedOnetabExport
+  jq '.tabGroups[]."tabsMeta"[]."url"' "$1" | tr -d '\"' > sanitizedOnetabExport
   rm ~/tmpStorage onetabExportNeedsFixing
 }
 
@@ -258,12 +251,12 @@ log() {
   mkdir -p "${logDir}"
   ymd="${year}-${month}-${day}"
   logFile="${logDir}/${ymd}.journal"
-  touch ${logFile}
-  [ $(wc -l < $logFile) -eq 0 ] && printf "# ${ymd}\n" >> ${logFile}
-  printf "\n## $(date '+%T')\n\n" >> ${logFile}
-  if [ ${EDITOR} == "vim" ]; then
-   vim + ${logFile}
+  touch "${logFile}"
+  [ "$(wc -l < "$logFile")" -eq 0 ] && printf "# ${ymd}\\n" >> "${logFile}"
+  printf "\\n## $(date '+%T')\\n\\n" >> "${logFile}"
+  if [ "${EDITOR}" == "vim" ]; then
+   vim + "${logFile}"
   else
-   ${EDITOR} ${logFile}
+   "${EDITOR} ${logFile}"
   fi
 }
