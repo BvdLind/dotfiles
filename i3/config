@@ -195,8 +195,9 @@ bindsym $mod+Shift+n border normal
 bindsym $mod+Shift+x border none
 bindsym $mod+Shift+o border pixel 1
 
+# bindsym Print exec scrot $HOME/`date +%Y-%m-%d_%H:%M:%S`.png
 exec --no-startup-id redshift-gtk
 # exec --no-startup-id firefox
 exec --no-startup-id $BROWSER
-exec /home/bas/.config/i3/low-battery-notice/dist/low-battery-notice/low-battery-notice
+# exec /home/bas/.config/i3/low-battery-notice/dist/low-battery-notice/low-battery-notice
 # exec /home/bas/.config/i3/i3_battery_alert/i3_battery_alert

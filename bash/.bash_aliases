@@ -1,3 +1,4 @@
+alias ctagsGen="rg --files | ctags -R --links=no -L -"
 alias i3r="i3-msg restart"
 alias grep='grep --color=auto'
 alias sbrc='source ~/.bashrc'
