@@ -4,7 +4,7 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-export TERMINAL="urxvt"
+export TERMINAL="alacritty"
 export EDITOR="vim"
 # export BROWSER="firefox"
 export BROWSER="brave-browser"

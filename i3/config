@@ -6,7 +6,7 @@ default_border none
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 # start a terminal
-bindsym $mod+Return exec --no-startup-id urxvt
+bindsym $mod+Return exec --no-startup-id alacritty
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -150,17 +150,17 @@ client.background       $bg
 bindsym $mod+d exec dmenu_run
 
 # Start i3bar to display a workspace bar
-bar {
-  colors {
-    focused_workspace  $fg     $fg     #ffffff
-    active_workspace   #333333 #5f676a #ffffff
-    inactive_workspace #333333 #222222 #888888
-    urgent_workspace   #2f343a #900000 #ffffff
-  }
-  font pango: FontAwesome 9
-  tray_output none
-  status_command ~/.config/i3/bumblebee-status/bumblebee-status -m cmus cpu disk redshift memory nic battery datetime brightness pasink xrandr system -t wal -p disk.path=/home datetime.locale=nl_NL.UTF-8 nic.format="{intf} {state} {ssid}"
-}
+#bar {
+#  colors {
+#    focused_workspace  $fg     $fg     #ffffff
+#    active_workspace   #333333 #5f676a #ffffff
+#    inactive_workspace #333333 #222222 #888888
+#    urgent_workspace   #2f343a #900000 #ffffff
+#  }
+#  font pango: FontAwesome 9
+#  tray_output none
+#  status_command ~/.config/i3/bumblebee-status/bumblebee-status -m cmus cpu disk redshift memory nic battery datetime brightness pasink xrandr system -t wal -p disk.path=/home datetime.locale=nl_NL.UTF-8 nic.format="{intf} {state} {ssid}"
+#}
 
 ## Manual management of external displays
 # Set the shortcuts and what they do
@@ -196,7 +196,7 @@ bindsym $mod+Shift+x border none
 bindsym $mod+Shift+o border pixel 1
 
 # bindsym Print exec scrot $HOME/`date +%Y-%m-%d_%H:%M:%S`.png
-exec --no-startup-id redshift-gtk
+#exec --no-startup-id redshift-gtk
 # exec --no-startup-id firefox
 exec --no-startup-id $BROWSER
 # exec /home/bas/.config/i3/low-battery-notice/dist/low-battery-notice/low-battery-notice
